@@ -59,6 +59,11 @@ module EventMachine
 			@keep_connection_open = arg
 		end
 
+		def xhr_streaming_enable arg=true
+			keep_connection_open arg
+			@xhr_streaming_enable = arg
+		end
+
 		# sugarings for headers
 		def content_type *mime
 			if mime.length > 0
@@ -150,7 +155,7 @@ module EventMachine
 			elsif @multiparts
 				@multipart_boundary = self.class.concoct_multipart_boundary
 				@headers["Content-type"] = "multipart/x-mixed-replace; boundary=\"#{@multipart_boundary}\""
-			else
+			elsif !@xhr_streaming_enable
 				@headers["Content-length"] = 0
 			end
 		end
